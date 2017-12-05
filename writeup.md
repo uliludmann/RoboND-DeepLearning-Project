@@ -29,9 +29,9 @@ e. g.:
 
 So one needs to train the network on all those different situations to obtain a robust recognition.
 
-For example My network tend to classify brighter pixel areas wrong. One possibility why this happens is because the Dataset contains more images where people are walking on the street (which has a bright pixel areas).
+For example My network tend to classify brighter pixel areas wrong. One possibility why this happens is because the Dataset contains more images where people are walking on the street (which has a bright pixel areas). See the following pixel as example.
 
-[example1: bright pixel areas not correctly classified]
+![example1: bright pixel areas not correctly classified](writeup_assets/bright_pixel_areas.png)
 
 I mixed the provided Dataset and my own dataset. In total I ended up having a big Dataset
 ```python
@@ -60,7 +60,7 @@ def fcn_model(inputs, num_classes):
     return layers.Conv2D(num_classes, 1, activation='softmax', padding='same')(x)
 ```
 
-[Network architecture]
+![Network architecture](writeup_assets/architecture.png)
 In the next chapter i'm going to introduce the different types of layers.
 ### Layer Explanation
 layer1 to layer3: Encoder layers
@@ -127,10 +127,14 @@ def bilinear_upsample(input_layer):
 ```
 We loose information in this procedure because as the image gets bigger we need to interpolate the pixels. In our case we used bilinear upsampling as technique. There are several other techniques e.g. remembering the pixels location from the pooling operation of the encoder. (Bed of nails upsampling http://cs231n.stanford.edu/slides/2017/cs231n_2017_lecture11.pdf, page 26)
 
+### Skip Connection
+Another technique I used for the fully convolutional network is skip connections. Here we take into account that the objects are not all of the same size in the picture (near pedestrians big, far pedestrians are small)
+
+A skip connection concatenates a layer from the encoder to the layer of the same size of the encoder.
+
+I tried many different variations of skip connections but the one that worked best was to connect all decoder layers to the respective encoder layers.
 
 ### Chosen Parameters
-
-
 I chose the following parameters:
 ```python
 learning_rate = 0.001
